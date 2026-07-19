@@ -1,0 +1,689 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Добавить товар</title>
+
+<style>
+    :root {
+        --bg: #090b10;
+        --card: rgba(18,21,28,.92);
+        --border: rgba(255,255,255,.08);
+        --text: #f5f6f8;
+        --muted: #8d94a3;
+        --accent: #ff5a3c;
+        --accent-hover: #ff704f;
+        --blue: #4c70ff;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+
+        font-family:
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 10% 0%,
+                rgba(255,90,60,.13),
+                transparent 32%
+            ),
+            radial-gradient(
+                circle at 90% 100%,
+                rgba(76,112,255,.13),
+                transparent 32%
+            ),
+            var(--bg);
+
+        color: var(--text);
+    }
+
+    /* ================= NAVBAR ================= */
+
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+
+        height: 72px;
+
+        display: flex;
+        align-items: center;
+
+        background:
+            rgba(9,11,16,.82);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        border-bottom:
+            1px solid var(--border);
+    }
+
+    .nav-container {
+        width: 100%;
+        max-width: 1200px;
+
+        margin: auto;
+        padding: 0 24px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        color: white;
+
+        text-decoration: none;
+
+        font-size: 25px;
+        font-weight: 900;
+
+        letter-spacing: -1px;
+    }
+
+    .logo span {
+        color: var(--accent);
+    }
+
+    .back {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        color: var(--muted);
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        transition: .2s;
+    }
+
+    .back:hover {
+        color: white;
+    }
+
+    /* ================= PAGE ================= */
+
+    .page {
+        width: 100%;
+        max-width: 850px;
+
+        margin: auto;
+
+        padding:
+            55px 20px
+            100px;
+    }
+
+    /* ================= HEADER ================= */
+
+    .page-header {
+        margin-bottom: 26px;
+    }
+
+    .small-title {
+        color: var(--accent);
+
+        font-size: 11px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        margin-bottom: 8px;
+
+        font-size: 32px;
+        font-weight: 850;
+
+        letter-spacing: -1px;
+    }
+
+    .subtitle {
+        color: var(--muted);
+
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+    /* ================= FORM CARD ================= */
+
+    .form-card {
+        position: relative;
+
+        padding: 30px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 22px;
+
+        background: var(--card);
+
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
+        box-shadow:
+            0 25px 60px
+            rgba(0,0,0,.30);
+
+        overflow: hidden;
+    }
+
+    .form-card::before {
+        content: "";
+
+        position: absolute;
+
+        width: 250px;
+        height: 250px;
+
+        top: -190px;
+        right: -100px;
+
+        border-radius: 50%;
+
+        background: var(--accent);
+
+        filter: blur(90px);
+
+        opacity: .16;
+
+        pointer-events: none;
+    }
+
+    /* ================= FORM ================= */
+
+    form {
+        position: relative;
+        z-index: 1;
+    }
+
+    form p {
+        display: flex;
+        flex-direction: column;
+
+        gap: 8px;
+
+        margin-bottom: 20px;
+    }
+
+    form label {
+        color: #c5c9d1;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        letter-spacing: .2px;
+    }
+
+    /* ================= INPUTS ================= */
+
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="email"],
+    form input[type="password"],
+    form input[type="tel"],
+    form input[type="url"],
+    form input[type="date"],
+    form select,
+    form textarea {
+
+        width: 100%;
+
+        padding: 13px 14px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,.045);
+
+        color: var(--text);
+
+        font-family: inherit;
+
+        font-size: 14px;
+
+        outline: none;
+
+        transition:
+            border-color .2s,
+            background .2s,
+            box-shadow .2s;
+    }
+
+    form input:hover,
+    form select:hover,
+    form textarea:hover {
+
+        border-color:
+            rgba(255,255,255,.16);
+    }
+
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+
+        border-color:
+            var(--accent);
+
+        background:
+            rgba(255,255,255,.065);
+
+        box-shadow:
+            0 0 0 3px
+            rgba(255,90,60,.12);
+    }
+
+    form input::placeholder,
+    form textarea::placeholder {
+
+        color: #626977;
+    }
+
+    /* ================= TEXTAREA ================= */
+
+    form textarea {
+
+        min-height: 130px;
+
+        resize: vertical;
+
+        line-height: 1.6;
+    }
+
+    /* ================= SELECT ================= */
+
+    form select {
+        cursor: pointer;
+    }
+
+    form select option {
+
+        background: #151820;
+
+        color: white;
+    }
+
+    /* ================= FILE ================= */
+
+    form input[type="file"] {
+
+        width: 100%;
+
+        padding: 12px;
+
+        border:
+            1px dashed
+            rgba(255,255,255,.15);
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,.025);
+
+        color: var(--muted);
+
+        font-size: 12px;
+    }
+
+    form input[type="file"]::file-selector-button {
+
+        margin-right: 12px;
+
+        padding: 9px 15px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background:
+            rgba(255,255,255,.09);
+
+        color: white;
+
+        font-family: inherit;
+
+        font-size: 12px;
+        font-weight: 650;
+
+        cursor: pointer;
+
+        transition: .2s;
+    }
+
+    form input[type="file"]::file-selector-button:hover {
+
+        background:
+            rgba(255,255,255,.16);
+    }
+
+    /* ================= CHECKBOX ================= */
+
+    form input[type="checkbox"] {
+
+        width: 18px;
+        height: 18px;
+
+        accent-color:
+            var(--accent);
+
+        cursor: pointer;
+    }
+
+    /* ================= HELP TEXT ================= */
+
+    .helptext {
+
+        color: var(--muted);
+
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+    /* ================= ERRORS ================= */
+
+    .errorlist {
+
+        list-style: none;
+
+        margin-bottom: 8px;
+
+        padding: 10px 12px;
+
+        border:
+            1px solid
+            rgba(255,90,60,.20);
+
+        border-radius: 9px;
+
+        background:
+            rgba(255,90,60,.08);
+
+        color: #ff8069;
+
+        font-size: 12px;
+    }
+
+    /* ================= ACTIONS ================= */
+
+    .form-actions {
+
+        display: flex;
+
+        gap: 12px;
+
+        margin-top: 30px;
+
+        padding-top: 25px;
+
+        border-top:
+            1px solid var(--border);
+    }
+
+    .cancel-btn {
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 14px 25px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,.04);
+
+        color: #c8ccd5;
+
+        text-decoration: none;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        transition: .2s;
+    }
+
+    .cancel-btn:hover {
+
+        color: white;
+
+        background:
+            rgba(255,255,255,.08);
+
+        transform:
+            translateY(-2px);
+    }
+
+    .save-btn {
+
+        flex: 1;
+
+        padding: 14px 20px;
+
+        border: none;
+
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--accent),
+                #ff784f
+            );
+
+        color: white;
+
+        font-family: inherit;
+
+        font-size: 14px;
+        font-weight: 800;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 10px 28px
+            rgba(255,90,60,.28);
+
+        transition:
+            transform .2s,
+            box-shadow .2s;
+    }
+
+    .save-btn:hover {
+
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0 14px 36px
+            rgba(255,90,60,.42);
+    }
+
+    .save-btn:active {
+
+        transform:
+            translateY(0);
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media(max-width:600px) {
+
+        .navbar {
+            height: 62px;
+        }
+
+        .nav-container {
+            padding: 0 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+        }
+
+        .page {
+
+            padding:
+                32px 14px
+                70px;
+        }
+
+        h1 {
+
+            font-size: 26px;
+        }
+
+        .form-card {
+
+            padding: 20px;
+
+            border-radius: 17px;
+        }
+
+        .form-actions {
+
+            flex-direction: column;
+        }
+
+        .save-btn {
+
+            order: 1;
+        }
+
+        .cancel-btn {
+
+            order: 2;
+        }
+
+    }
+
+</style>
+</head>
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a
+            href="{% url 'product_list' %}"
+            class="logo"
+        >
+            lalafo<span>.</span>
+        </a>
+
+
+        <a
+            href="{% url 'product_list' %}"
+            class="back"
+        >
+            ← Все товары
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= PAGE ================= -->
+
+<main class="page">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div class="small-title">
+            Новое объявление
+        </div>
+
+        <h1>
+            Добавить товар
+        </h1>
+
+        <p class="subtitle">
+            Заполните информацию о товаре.
+            Добавьте название, цену, фотографию
+            и подробное описание.
+        </p>
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <div class="form-card">
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+
+            {{ form.as_p }}
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'product_list' %}"
+                    class="cancel-btn"
+                >
+                    Отмена
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    + Добавить товар
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>

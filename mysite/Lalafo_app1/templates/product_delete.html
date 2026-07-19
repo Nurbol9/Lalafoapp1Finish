@@ -1,0 +1,631 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Удалить товар</title>
+
+<style>
+    :root {
+        --bg: #090b10;
+        --card: rgba(18,21,28,.94);
+        --border: rgba(255,255,255,.08);
+        --text: #f5f6f8;
+        --muted: #8d94a3;
+        --accent: #ff5a3c;
+        --danger: #ff4d4d;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+
+        font-family:
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 10% 0%,
+                rgba(255,90,60,.14),
+                transparent 32%
+            ),
+            radial-gradient(
+                circle at 90% 100%,
+                rgba(255,77,77,.10),
+                transparent 32%
+            ),
+            var(--bg);
+
+        color: var(--text);
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ================= NAVBAR ================= */
+
+    .navbar {
+        height: 72px;
+
+        display: flex;
+        align-items: center;
+
+        background:
+            rgba(9,11,16,.82);
+
+        backdrop-filter: blur(18px);
+
+        border-bottom:
+            1px solid var(--border);
+    }
+
+    .nav-container {
+        width: 100%;
+        max-width: 1200px;
+
+        margin: auto;
+        padding: 0 24px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        text-decoration: none;
+
+        color: white;
+
+        font-size: 25px;
+        font-weight: 900;
+
+        letter-spacing: -1px;
+    }
+
+    .logo span {
+        color: var(--accent);
+    }
+
+    .back {
+        color: var(--muted);
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        transition: .2s;
+    }
+
+    .back:hover {
+        color: white;
+    }
+
+    /* ================= PAGE ================= */
+
+    .page {
+        flex: 1;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 50px 16px;
+    }
+
+    /* ================= CARD ================= */
+
+    .confirm-card {
+        position: relative;
+
+        width: 100%;
+        max-width: 470px;
+
+        padding: 35px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 22px;
+
+        background: var(--card);
+
+        backdrop-filter: blur(20px);
+
+        box-shadow:
+            0 30px 70px
+            rgba(0,0,0,.40);
+
+        text-align: center;
+
+        overflow: hidden;
+    }
+
+    .confirm-card::before {
+        content: "";
+
+        position: absolute;
+
+        width: 220px;
+        height: 220px;
+
+        top: -160px;
+        left: 50%;
+
+        transform:
+            translateX(-50%);
+
+        border-radius: 50%;
+
+        background:
+            var(--danger);
+
+        filter: blur(90px);
+
+        opacity: .17;
+
+        pointer-events: none;
+    }
+
+    /* ================= ICON ================= */
+
+    .icon {
+        position: relative;
+
+        width: 68px;
+        height: 68px;
+
+        margin:
+            0 auto
+            22px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 20px;
+
+        background:
+            rgba(255,77,77,.10);
+
+        border:
+            1px solid
+            rgba(255,77,77,.25);
+
+        color: #ff6b6b;
+
+        font-size: 30px;
+        font-weight: 700;
+
+        box-shadow:
+            0 10px 30px
+            rgba(255,77,77,.08);
+    }
+
+    /* ================= TEXT ================= */
+
+    .small-title {
+        margin-bottom: 8px;
+
+        color: var(--danger);
+
+        font-size: 10px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1.4px;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+
+        font-size: 24px;
+        font-weight: 800;
+
+        letter-spacing: -.5px;
+    }
+
+    .hint {
+        max-width: 360px;
+
+        margin:
+            0 auto
+            25px;
+
+        color: var(--muted);
+
+        font-size: 13px;
+
+        line-height: 1.6;
+    }
+
+    /* ================= PRODUCT ================= */
+
+    .product-box {
+        display: flex;
+
+        align-items: center;
+
+        gap: 13px;
+
+        margin-bottom: 27px;
+
+        padding: 13px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 14px;
+
+        background:
+            rgba(255,255,255,.03);
+
+        text-align: left;
+    }
+
+    .product-image {
+        width: 58px;
+        height: 58px;
+
+        flex-shrink: 0;
+
+        border-radius: 10px;
+
+        overflow: hidden;
+
+        background: #181b23;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+    }
+
+    .no-image {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: var(--muted);
+
+        font-size: 20px;
+    }
+
+    .product-info {
+        min-width: 0;
+    }
+
+    .product-name {
+        margin-bottom: 4px;
+
+        color: white;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .product-price {
+        color: var(--muted);
+
+        font-size: 12px;
+    }
+
+    /* ================= WARNING ================= */
+
+    .warning {
+        margin-bottom: 27px;
+
+        padding: 12px 14px;
+
+        border:
+            1px solid
+            rgba(255,77,77,.13);
+
+        border-radius: 11px;
+
+        background:
+            rgba(255,77,77,.055);
+
+        color: #c99b9b;
+
+        font-size: 11px;
+
+        line-height: 1.5;
+
+        text-align: left;
+    }
+
+    /* ================= BUTTONS ================= */
+
+    form {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 11px;
+    }
+
+    .btn {
+        min-height: 46px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 12px 18px;
+
+        border-radius: 11px;
+
+        font-family: inherit;
+
+        font-size: 13px;
+        font-weight: 750;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        transition:
+            transform .2s,
+            background .2s,
+            box-shadow .2s;
+    }
+
+    /* CANCEL */
+
+    .btn-cancel {
+        color: #d1d4db;
+
+        background:
+            rgba(255,255,255,.045);
+
+        border:
+            1px solid var(--border);
+    }
+
+    .btn-cancel:hover {
+        color: white;
+
+        background:
+            rgba(255,255,255,.08);
+
+        transform:
+            translateY(-2px);
+    }
+
+    /* DELETE */
+
+    .btn-delete {
+        border: none;
+
+        color: white;
+
+        background:
+            linear-gradient(
+                135deg,
+                #ff4545,
+                #ff6657
+            );
+
+        box-shadow:
+            0 10px 27px
+            rgba(255,77,77,.25);
+    }
+
+    .btn-delete:hover {
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0 14px 35px
+            rgba(255,77,77,.40);
+    }
+
+    .btn-delete:active {
+        transform: translateY(0);
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media(max-width:600px) {
+
+        .navbar {
+            height: 62px;
+        }
+
+        .nav-container {
+            padding: 0 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+        }
+
+        .page {
+            padding: 30px 14px;
+        }
+
+        .confirm-card {
+            padding: 27px 20px;
+
+            border-radius: 18px;
+        }
+
+        h1 {
+            font-size: 21px;
+        }
+
+        form {
+            grid-template-columns: 1fr;
+        }
+
+        .btn-cancel {
+            order: 2;
+        }
+
+        .btn-delete {
+            order: 1;
+        }
+
+    }
+
+</style>
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a
+            href="{% url 'product_list' %}"
+            class="logo"
+        >
+            lalafo<span>.</span>
+        </a>
+
+
+        <a
+            href="{% url 'product_detail' product.pk %}"
+            class="back"
+        >
+            ← Назад к товару
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- PAGE -->
+
+<main class="page">
+
+    <div class="confirm-card">
+
+
+        <!-- ICON -->
+
+        <div class="icon">
+            !
+        </div>
+
+
+        <!-- TITLE -->
+
+        <div class="small-title">
+            Удаление товара
+        </div>
+
+        <h1>
+            Удалить этот товар?
+        </h1>
+
+        <p class="hint">
+            Вы собираетесь удалить объявление.
+            После подтверждения восстановить его
+            будет невозможно.
+        </p>
+
+
+        <!-- PRODUCT -->
+
+        <div class="product-box">
+
+            <div class="product-image">
+
+                {% if product.product_image %}
+
+                    <img
+                        src="{{ product.product_image.url }}"
+                        alt="{{ product.product_name }}"
+                    >
+
+                {% else %}
+
+                    <div class="no-image">
+                        ◫
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="product-info">
+
+                <div class="product-name">
+                    {{ product.product_name }}
+                </div>
+
+                <div class="product-price">
+                    {{ product.price }} сом
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WARNING -->
+
+        <div class="warning">
+            ⚠ Все данные этого товара будут удалены
+            без возможности восстановления.
+        </div>
+
+
+        <!-- FORM -->
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <a
+                href="{% url 'product_detail' product.pk %}"
+                class="btn btn-cancel"
+            >
+                Отмена
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn btn-delete"
+            >
+                Удалить товар
+            </button>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>

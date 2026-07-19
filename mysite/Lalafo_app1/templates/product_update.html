@@ -1,0 +1,636 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Редактировать товар</title>
+
+<style>
+    :root {
+        --bg: #090b10;
+        --card: rgba(18,21,28,.92);
+        --border: rgba(255,255,255,.08);
+        --text: #f5f6f8;
+        --muted: #8d94a3;
+        --accent: #ff5a3c;
+        --accent-hover: #ff704f;
+        --blue: #4c70ff;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+
+        font-family:
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 10% 0%,
+                rgba(255,90,60,.13),
+                transparent 32%
+            ),
+            radial-gradient(
+                circle at 90% 100%,
+                rgba(76,112,255,.13),
+                transparent 32%
+            ),
+            var(--bg);
+
+        color: var(--text);
+    }
+
+    /* ================= NAVBAR ================= */
+
+    .navbar {
+        height: 72px;
+
+        display: flex;
+        align-items: center;
+
+        background: rgba(9,11,16,.82);
+
+        backdrop-filter: blur(18px);
+
+        border-bottom:
+            1px solid var(--border);
+    }
+
+    .nav-container {
+        width: 100%;
+        max-width: 1200px;
+
+        margin: auto;
+        padding: 0 24px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        color: white;
+
+        text-decoration: none;
+
+        font-size: 25px;
+        font-weight: 900;
+
+        letter-spacing: -1px;
+    }
+
+    .logo span {
+        color: var(--accent);
+    }
+
+    .back-link {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        color: var(--muted);
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        transition: .2s;
+    }
+
+    .back-link:hover {
+        color: white;
+    }
+
+    /* ================= PAGE ================= */
+
+    .page {
+        max-width: 850px;
+
+        margin: auto;
+
+        padding:
+            55px 20px
+            100px;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .small-title {
+        color: var(--accent);
+
+        font-size: 11px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        font-size: 32px;
+
+        letter-spacing: -1px;
+
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        color: var(--muted);
+
+        font-size: 14px;
+
+        line-height: 1.5;
+    }
+
+    /* ================= FORM CARD ================= */
+
+    .form-card {
+        position: relative;
+
+        background: var(--card);
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 22px;
+
+        padding: 30px;
+
+        backdrop-filter: blur(20px);
+
+        box-shadow:
+            0 25px 60px
+            rgba(0,0,0,.30);
+
+        overflow: hidden;
+    }
+
+    .form-card::before {
+        content: "";
+
+        position: absolute;
+
+        width: 250px;
+        height: 250px;
+
+        top: -180px;
+        right: -100px;
+
+        border-radius: 50%;
+
+        background: var(--blue);
+
+        filter: blur(90px);
+
+        opacity: .15;
+
+        pointer-events: none;
+    }
+
+    /* ================= FORM ================= */
+
+    form p {
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 8px;
+
+        margin-bottom: 20px;
+    }
+
+    form label {
+        color: #c5c9d1;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        letter-spacing: .2px;
+    }
+
+    /* INPUTS */
+
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="email"],
+    form input[type="password"],
+    form input[type="tel"],
+    form input[type="url"],
+    form input[type="date"],
+    form select,
+    form textarea {
+
+        width: 100%;
+
+        padding: 13px 14px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,.045);
+
+        color: var(--text);
+
+        font-family: inherit;
+
+        font-size: 14px;
+
+        outline: none;
+
+        transition:
+            border-color .2s,
+            background .2s,
+            box-shadow .2s;
+    }
+
+    form input:hover,
+    form textarea:hover,
+    form select:hover {
+        border-color:
+            rgba(255,255,255,.15);
+    }
+
+    form input:focus,
+    form textarea:focus,
+    form select:focus {
+
+        border-color: var(--blue);
+
+        background:
+            rgba(255,255,255,.065);
+
+        box-shadow:
+            0 0 0 3px
+            rgba(76,112,255,.12);
+    }
+
+    form textarea {
+        min-height: 120px;
+
+        resize: vertical;
+    }
+
+    /* SELECT */
+
+    form select {
+        cursor: pointer;
+    }
+
+    form select option {
+        background: #151820;
+
+        color: white;
+    }
+
+    /* FILE */
+
+    form input[type="file"] {
+
+        width: 100%;
+
+        padding: 10px;
+
+        border:
+            1px dashed
+            rgba(255,255,255,.14);
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,.025);
+
+        color: var(--muted);
+
+        font-size: 12px;
+    }
+
+    form input[type="file"]::file-selector-button {
+
+        padding: 9px 14px;
+
+        margin-right: 12px;
+
+        border: 0;
+
+        border-radius: 8px;
+
+        background:
+            rgba(255,255,255,.09);
+
+        color: white;
+
+        cursor: pointer;
+
+        font-weight: 600;
+
+        transition: .2s;
+    }
+
+    form input[type="file"]::file-selector-button:hover {
+
+        background:
+            rgba(255,255,255,.15);
+    }
+
+    /* CURRENT FILE LINK */
+
+    form p a {
+        color: #7895ff;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        word-break: break-all;
+    }
+
+    form p a:hover {
+        text-decoration: underline;
+    }
+
+    /* CHECKBOX */
+
+    form input[type="checkbox"] {
+
+        width: 18px;
+        height: 18px;
+
+        accent-color:
+            var(--accent);
+
+        cursor: pointer;
+    }
+
+    /* HELP TEXT */
+
+    .helptext {
+
+        color: var(--muted);
+
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+    /* ERRORS */
+
+    .errorlist {
+
+        list-style: none;
+
+        padding: 10px 12px;
+        margin-bottom: 8px;
+
+        border-radius: 9px;
+
+        background:
+            rgba(255,90,60,.09);
+
+        border:
+            1px solid
+            rgba(255,90,60,.20);
+
+        color: #ff8069;
+
+        font-size: 12px;
+    }
+
+    /* ================= BUTTONS ================= */
+
+    .form-actions {
+
+        display: flex;
+
+        gap: 12px;
+
+        margin-top: 30px;
+
+        padding-top: 25px;
+
+        border-top:
+            1px solid var(--border);
+    }
+
+    .save-btn {
+
+        flex: 1;
+
+        border: none;
+
+        padding: 14px 20px;
+
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--accent),
+                #ff784f
+            );
+
+        color: white;
+
+        font-size: 14px;
+        font-weight: 800;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 10px 28px
+            rgba(255,90,60,.28);
+
+        transition: .2s;
+    }
+
+    .save-btn:hover {
+
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0 14px 35px
+            rgba(255,90,60,.40);
+    }
+
+    .cancel-btn {
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 14px 24px;
+
+        border-radius: 12px;
+
+        border:
+            1px solid var(--border);
+
+        background:
+            rgba(255,255,255,.04);
+
+        color: #c8ccd5;
+
+        text-decoration: none;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        transition: .2s;
+    }
+
+    .cancel-btn:hover {
+
+        background:
+            rgba(255,255,255,.08);
+
+        color: white;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media(max-width:600px) {
+
+        .navbar {
+            height: 62px;
+        }
+
+        .nav-container {
+            padding: 0 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+        }
+
+        .page {
+            padding:
+                32px 14px
+                70px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        .form-card {
+            padding: 20px;
+
+            border-radius: 17px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .cancel-btn {
+            order: 2;
+        }
+
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a href="#" class="logo">
+            lalafo<span>.</span>
+        </a>
+
+        <a
+            href="{% url 'product_detail' object.pk %}"
+            class="back-link"
+        >
+            ← Назад к товару
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- PAGE -->
+
+<main class="page">
+
+    <div class="page-header">
+
+        <div class="small-title">
+            Редактирование
+        </div>
+
+        <h1>
+            Редактировать товар
+        </h1>
+
+        <p class="subtitle">
+            Измените необходимые данные товара
+            и сохраните изменения.
+        </p>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'product_detail' object.pk %}"
+                    class="cancel-btn"
+                >
+                    Отмена
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    Сохранить изменения
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>
